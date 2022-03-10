@@ -13,17 +13,16 @@ session_start();
 $listid = $_POST["listid"];
 $listname = $_POST["listname"];
 
+$getWords = "SELECT * FROM word WHERE list_id=$listid";
+$result = mysqli_query($conn, $getWords);   
 
 if(array_key_exists('addWords', $_POST)) {
     addWords();
 }
 
-// if(array_key_exists('deleteWord', $_POST)) {
-//     deleteWord();
-// }
-
-$getWords = "SELECT * FROM word WHERE list_id=$listid";
-$result = mysqli_query($conn, $getWords);   
+if(array_key_exists('deleteWord', $_POST)) {
+    deleteWord();
+}
 
 
 function addWords() {
@@ -50,26 +49,27 @@ function addWords() {
             echo "Versturen van de data is mislukt!";
         }
     }
+
 };
 
-// function deleteWord() {
-//     include 'Auth/config.php';
+function deleteWord() {
+    include 'Auth/config.php';
 
-//     $wordid = $_POST["wordId"];
+    $wordid = $_POST["wordId"];
 
-//     GLOBAL $conn;
+    GLOBAL $conn;
 
-//     if ($conn->connect_error) {
-//       die("Connection failed: " . $conn->connect_error);
-//     }
+    if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+    }
     
-//     $sql = "DELETE FROM word WHERE id=$wordid";
+    $sql = "DELETE FROM word WHERE id=$wordid";
 
-//     if ($conn->query($sql) === TRUE) {
-//     } else {
-//         echo "Error: " . $sql . "<br>" . $conn->error;
-//     }
-// }
+    if ($conn->query($sql) === TRUE) {
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+}
 ?>
 
 <html>
@@ -253,32 +253,41 @@ function addWords() {
                     <div style="margin-top: 10px;">
                         <div>
                             <input type="hidden" name="wordIdd" value='<?php echo $row["id"]; ?>'>
-                            <input class="button-reset button-delete" id="delete_button<?php echo $row['id'];?>" onclick="delete_row('<?php echo $row['id'];?>');" name="delAddedWord" type="submit" value="verwijder">
+                            <input class="button-reset button-delete" id="delete_button<?php echo $row['id'];?>" name="delAddedWord" type="submit" value="verwijder">
                             <div id="verwijderen"></div>
                         </div>
                     </div>
                 </div>
             </form>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
             <script> 
-                function delete_row(id)
-                {
-                    $.ajax ({
-                        type:'POST',
-                        url:'delete-data.php',
-                        data:{
-                        delete_row:'delete_row',
-                        row_id:id,
-                        },
-                        success:function(response) {
-                            if(response=="success")
-                            {
-                                var row=document.getElementById("row"+id);
-                                row.parentNode.removeChild(row);
-                            }
-                        }
-                    });
-                }
+                //gaat in input veld
+                
+                // onclick="delete_row('
+                <?php 
+                // echo $row['id'];
+                ?>
+                // ');" 
+
+
+                // function delete_row(id)
+                // {
+                //     $.ajax ({
+                //         type:'POST',
+                //         url:'delete-data.php',
+                //         data:{
+                //         delete_row:'delete_row',
+                //         row_id:id,
+                //         },
+                //         success:function(response) {
+                //             if(response=="success")
+                //             {
+                //                 var row=document.getElementById("row"+id);
+                //                 row.parentNode.removeChild(row);
+                //             }
+                //         }
+                //     });
+                // }
                             </script>
         </div>
         <div style="width: 430px; margin-left: 3rem;" class="lijst-div" style="margin-top:30px;">

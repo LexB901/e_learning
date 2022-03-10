@@ -1,9 +1,49 @@
 <?php 
-session_start(); 
+session_start();    
 
-$wordListNL = ['Hallo', 'Doei', 'Ik', 'Jij', 'Stad', 'Dorp', 'Appel', 'Banaan', 'Huis', 'Kamer'];
-$wordListEN = ['Hello', 'Bye', 'Me', 'You', 'City', 'Village', 'Apple', 'Banana', 'House', 'Room'];
+include 'Auth/config.php';
 
+GLOBAL $conn;
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$listid = $_POST["listid"];
+$listname = $_POST["listname"];
+
+$getWords = "SELECT * FROM word WHERE list_id=$listid";
+$result = mysqli_query($conn, $getWords);  
+$result2 = mysqli_query($conn, $getWords);
+$result3 = mysqli_query($conn, $getWords);  
+$result4 = mysqli_query($conn, $getWords);
+
+function checkForm() {
+    include 'Auth/config.php';
+
+    $listid = $_POST["listid"];
+    $wordsNL = $_POST["word-nl"];
+    $wordsEN = $_POST["word-en"];
+
+    GLOBAL $conn;
+
+    if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+    }
+    
+    foreach (array_combine($wordsNL, $wordsEN) as $wordNL => $wordEN) {
+        if (!empty($wordNL) && !empty($wordEN)) {            
+            $sql = "INSERT INTO word (list_id, word_nl, word_en) VALUES ('$listid', '$wordNL', '$wordEN')";
+        } else {
+            continue;
+        }
+        if ($conn->query($sql) === TRUE) {
+        } else {
+            echo "Versturen van de data is mislukt!";
+        }
+    }
+
+};
 
 ?>
 
@@ -36,11 +76,9 @@ $wordListEN = ['Hello', 'Bye', 'Me', 'You', 'City', 'Village', 'Apple', 'Banana'
             display: flex;
             flex-direction: column;
         }
-
         .right-ans {
             background-color: lightgreen;
         }
-
         .trans-active {
             color: #ffc107;
         }
@@ -62,7 +100,6 @@ $wordListEN = ['Hello', 'Bye', 'Me', 'You', 'City', 'Village', 'Apple', 'Banana'
         .display-none {
             display: none;
         }
-
         
     </style>
     <script>
@@ -71,8 +108,7 @@ $wordListEN = ['Hello', 'Bye', 'Me', 'You', 'City', 'Village', 'Apple', 'Banana'
             $( "#ENNL" ).removeClass( "trans-active" ).addClass( "trans-inactive" );
             $( "#nl-en" ).removeClass( "display-none" );
             $( "#en-nl" ).addClass( "display-none" );
-            $( "#score" ).addClass( "display-none" );
-
+            $( "#score" ).addClass( "display-none" ).removeClass( "display-none" );
         }
 
         function ChangeTransENNL() {
@@ -80,8 +116,7 @@ $wordListEN = ['Hello', 'Bye', 'Me', 'You', 'City', 'Village', 'Apple', 'Banana'
             $( "#NLEN" ).removeClass( "trans-active" ).addClass( "trans-inactive" );
             $( "#en-nl" ).removeClass( "display-none" );
             $( "#nl-en" ).addClass( "display-none" );
-            $( "#score" ).addClass( "display-none" );
-
+            $( "#score" ).addClass( "display-none" ).removeClass( "display-none" );
         }
     </script>
 </head>
@@ -94,52 +129,63 @@ $wordListEN = ['Hello', 'Bye', 'Me', 'You', 'City', 'Village', 'Apple', 'Banana'
     <a style="width: 2rem;" href=""></a>
     <a id="ENNL" class="trans-inactive" onclick="ChangeTransENNL()">EN -> NL</a>
 </div>
-
-    <div class="lijst-div">
-        <h2 class="my-5">Let op de hoofdletters!</h2>
-    </div>
-
+<div>
+    <h4 class="lijst-div"><?php echo $listname ?></h4>
+</div>
+           
     <div id="nl-en" class="lijst-div" style="margin-top: 2rem; align-items: start;">
         <div style="margin-right: 2rem; text-align: right;">
             <div class="word-list">
-                
-                <?php foreach($wordListNL as $key=>$value): ?>
+                <?php 
+                    while ($row = mysqli_fetch_array($result)) {
+                ?>
                     <tr>
-                        <p class="line-height"><?= $value; ?></p>
+                        <p class="line-height"><?php echo $row["word_nl"]; ?></p>
                     </tr>
-                <?php endforeach; ?>
-                
-            </div>
-        </div>
+                <?php 
+                    }
+                ?>            
+            </div>                
+        </div>       
         
         <div style="margin-left: 2rem;">
             <form id="input-form" class="input-form" method="post">
-                <input type="text" id="wordCheck0" name="word0">
-                <input type="text" id="wordCheck1" name="word1">
-                <input type="text" id="wordCheck2" name="word2">
-                <input type="text" id="wordCheck3" name="word3">
-                <input type="text" id="wordCheck4" name="word4">
-                <input type="text" id="wordCheck5" name="word5">
-                <input type="text" id="wordCheck6" name="word6">
-                <input type="text" id="wordCheck7" name="word7">
-                <input type="text" id="wordCheck8" name="word8">
-                <input type="text" id="wordCheck9" name="word9">
-                <br>
-                <input onclick="AnsCheck()" type="button" value="Nakijken">
-                <input onclick="ResetForm()" type="button" value="Opnieuw proberen">
+                <?php 
+                    for ($i=0;$i<50;$i++) {
+                        // for ($x=0;$x<50;$x++) {
+                            while ($row = mysqli_fetch_array($result2)) {   
+                ?>
+                    <input type="text" id="wordCheck<?php echo $i++;?>" name="word-en[]" required>
+                    <input type="hidden" name="wordIdd" value='<?php echo $row["id"]; ?>'>
 
+                <?php 
+                            }
+                        // }
+                    }
+                ?>  
+
+                <input onclick="AnsCheck()" type="button" value="Nakijken">
             </form>
             <script>
-                function ResetForm() {
-                    document.getElementById("input-form").reset();
-                }
+                $(document).ready(function() {
+                    $('input').keyup(function(event) {
+                        if (event.which === 13)
+                        {
+                            event.preventDefault();
+                            $('form').submit();
+                        }
+                    });
+                });
+
                 function AnsCheck() {
-                    let removeClass = document.getElementById("score");
-                    removeClass.classList.remove("display-none");
                     document.getElementById("score").innerHTML = "Je hebt " + score + "/10 woorden goed!";   
                 }
 
                 let score = 0;
+
+                
+
+
                 $('#wordCheck0').keyup(function() {
                     var newInput = this.value;
                     if (newInput == "Hello") {
@@ -252,168 +298,160 @@ $wordListEN = ['Hello', 'Bye', 'Me', 'You', 'City', 'Village', 'Apple', 'Banana'
                 });
                 
             </script>
-
-        </div>
-        
+        </div>       
     </div>
 
     <div id="en-nl" class="lijst-div display-none" style="margin-top: 2rem; align-items: start;">
         <div style="margin-right: 2rem; text-align: right;">
             <div class="word-list">
-                
-                <?php foreach($wordListEN as $key=>$value): ?>
+                <?php 
+                    while ($row = mysqli_fetch_array($result3)) {
+                ?>
                     <tr>
-                        <p class="line-height"><?= $value; ?></p>
+                        <p class="line-height"><?php echo $row["word_en"]; ?></p>
                     </tr>
-                <?php endforeach; ?>
-                
-            </div>
-        </div>
+                <?php 
+                    }
+                ?>            
+            </div>                
+        </div>       
         
         <div style="margin-left: 2rem;">
-            <form id="input-form2" class="input-form" method="post">
-                <input type="text" id="wordCheck10" name="word10">
-                <input type="text" id="wordCheck11" name="word11">
-                <input type="text" id="wordCheck12" name="word12">
-                <input type="text" id="wordCheck13" name="word13">
-                <input type="text" id="wordCheck14" name="word14">
-                <input type="text" id="wordCheck15" name="word15">
-                <input type="text" id="wordCheck16" name="word16">
-                <input type="text" id="wordCheck17" name="word17">
-                <input type="text" id="wordCheck18" name="word18">
-                <input type="text" id="wordCheck19" name="word19">
-                <br>
-                <input onclick="AnsCheck2()" type="button" value="Nakijken">
-                <input onclick="ResetForm2()" type="button" value="Opnieuw proberen">
+            <form id="input-form" class="input-form" method="post">
+                <?php 
+                    for ($i=50;$i<100;$i++) {
+                        // for ($x=50;$x<100;$x++) {
+                            while ($row = mysqli_fetch_array($result4)) {   
+                ?>
+                    <input type="text" id="wordCheck<?php echo $i++;?>" name='<?php echo $row["id"]; ?>'>
+                <?php 
+                            }
+                        // }
+                    }
+                ?>  
+
+                <input onclick="AnsCheck()" type="button" value="Nakijken">
             </form>
             <script>
-                function ResetForm2() {
-                    document.getElementById("input-form2").reset();
-                }
-                function AnsCheck2() {
-                    let removeClass2 = document.getElementById("score");
-                    removeClass2.classList.remove("display-none");
-                    document.getElementById("score").innerHTML = "Je hebt " + score2 + "/10 woorden goed!";   
+                function AnsCheck() {
+                    document.getElementById("score").innerHTML = "Je hebt " + score + "/10 woorden goed!";   
                 }
 
-                let score2 = 0;
-                $('#wordCheck10').keyup(function() {
+                let score = 0;
+                $('#wordCheck50').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Hallo") {
-                        if ($("#wordCheck10").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "Hello") {
+                        if ($("#wordCheck50").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck10").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck50").addClass("right-ans");
+                            score += 1;
                         }
                     } 
                 });
-                $('#wordCheck11').keyup(function() {
+                $('#wordCheck51').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Doei") {
-                        if ($("#wordCheck11").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "Bye") {
+                        if ($("#wordCheck51").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck11").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck51").addClass("right-ans");
+                            score += 1;
                         }
                     }
                 });
-                $('#wordCheck12').keyup(function() {
+                $('#wordCheck52').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Ik") {
-                        if ($("#wordCheck12").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "Me") {
+                        if ($("#wordCheck52").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck12").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck52").addClass("right-ans");
+                            score += 1;
                         }
                     }
                 });
-                $('#wordCheck13').keyup(function() {
+                $('#wordCheck53').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Jij") {
-                        if ($("#wordCheck13").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "You") {
+                        if ($("#wordCheck53").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck13").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck53").addClass("right-ans");
+                            score += 1;
                         }
                     }
                 });
-                $('#wordCheck14').keyup(function() {
+                $('#wordCheck54').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Stad") {
-                        if ($("#wordCheck14").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "City") {
+                        if ($("#wordCheck54").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck14").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck54").addClass("right-ans");
+                            score += 1;
                         }
                     }
                 });
-                $('#wordCheck15').keyup(function() {
+                $('#wordCheck55').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Dorp") {
-                        if ($("#wordCheck15").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "Village") {
+                        if ($("#wordCheck55").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck15").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck55").addClass("right-ans");
+                            score += 1;
                         }
                     }
                 });
-                $('#wordCheck16').keyup(function() {
+                $('#wordCheck56').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Appel") {
-                        if ($("#wordCheck16").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "Apple") {
+                        if ($("#wordCheck56").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck16").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck56").addClass("right-ans");
+                            score += 1;
                         }
                     }
                 });
-                $('#wordCheck17').keyup(function() {
+                $('#wordCheck57').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Banaan") {
-                        if ($("#wordCheck17").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "Banana") {
+                        if ($("#wordCheck57").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck17").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck57").addClass("right-ans");
+                            score += 1;
                         }
                     }
                 });
-                $('#wordCheck18').keyup(function() {
+                $('#wordCheck58').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Huis") {
-                        if ($("#wordCheck18").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "House") {
+                        if ($("#wordCheck58").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck18").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck58").addClass("right-ans");
+                            score += 1;
                         }
                     }
                 });
-                $('#wordCheck19').keyup(function() {
+                $('#wordCheck59').keyup(function() {
                     var newInput = this.value;
-                    if (newInput == "Kamer") {
-                        if ($("#wordCheck19").hasClass("right-ans")) {
-                            score2 = score2;
+                    if (newInput == "Room") {
+                        if ($("#wordCheck59").hasClass("right-ans")) {
+                            score = score;
                         } else {
-                            $("#wordCheck19").addClass("right-ans");
-                            score2 += 1;
+                            $("#wordCheck59").addClass("right-ans");
+                            score += 1;
                         }
                     }
                 });
                 
             </script>
-
-        </div>
-        
+        </div>       
     </div>
-
     <div style="margin-top: 100px;" class="lijst-div">
         <h4 id="score" class="my-5"></h4>
     </div>

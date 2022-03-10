@@ -79,7 +79,7 @@ function deleteList() {
     <meta charset="UTF-8">
     <title>Welcome</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">   
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
 
     <style>
         body {
@@ -201,7 +201,7 @@ function deleteList() {
             <table class="table table-striped table-condensed table-bordered">   
                 <thead>   
                 <tr>   
-                    <th width="70%">Name</th>
+                    <th width="20%">Name</th>
                     <th width="10%">Oefenen</th>   
                     <th width="10%">Bewerken</th>   
                     <th width="10%">Verwijderen</th>   
@@ -211,7 +211,7 @@ function deleteList() {
                 <tr>
                     <td class="bg-white">Standaard lijst</td>
                     <td class="bg-white"><a class="house-color" href="default-list.php">Oefenen</a></td>
-                    <td class="bg-white">   </td>
+                    <td class="bg-white"></td>
                     <td class="bg-white"></td>
                 </tr>
                 <?php     
@@ -220,7 +220,17 @@ function deleteList() {
                 
                 <tr>     
                     <td class="bg-white"><?php echo $row["list_name"]; ?></td>   
-                    <td class="bg-white"></td>
+                    <td class="bg-white">
+                    <form method="post" action="practice-list.php">
+                            <input type="hidden" name="listid" value='<?php 
+                            echo $row["id"]; 
+                            ?>'>
+                            <input type="hidden" name="listname" value='<?php
+                             echo $row["list_name"]; 
+                             ?>'>
+                            <input type="submit" name="practiceList" value="oefenen" class="house-color button-reset">
+                        </form></td>
+                    </td>
                     <td class="bg-white">
                         <form method="post" action="edit-list.php">
                             <input type="hidden" name="listid" value='<?php 
