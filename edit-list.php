@@ -13,9 +13,6 @@ session_start();
 $listid = $_POST["listid"];
 $listname = $_POST["listname"];
 
-$getWords = "SELECT * FROM word WHERE list_id=$listid";
-$result = mysqli_query($conn, $getWords);   
-
 if(array_key_exists('addWords', $_POST)) {
     addWords();
 }
@@ -24,6 +21,8 @@ if(array_key_exists('deleteWord', $_POST)) {
     deleteWord();
 }
 
+$getWords = "SELECT * FROM word WHERE list_id=$listid";
+$result = mysqli_query($conn, $getWords);   
 
 function addWords() {
     include 'Auth/config.php';
