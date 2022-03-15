@@ -3,7 +3,7 @@ session_start();
 
 include 'Auth/config.php';
 
-// include 'get-data.php';
+error_reporting(E_ERROR | E_PARSE);
 
 GLOBAL $conn;
 
@@ -21,6 +21,57 @@ $result3 = mysqli_query($conn, $getWords);
 $result4 = mysqli_query($conn, $getWords);
 $result5 = mysqli_query($conn, $getWords);
 
+if(array_key_exists('checkWordEN', $_POST)) {
+    checkWordEN();
+}
+
+$getTotal = "SELECT id FROM word WHERE list_id = $listid";
+if ($newTotal = mysqli_query($conn, $getTotal)) {
+    $total = mysqli_num_rows($newTotal);
+}
+
+$total = $total;
+$score = 0;
+
+function checkWordEN() {
+    include 'Auth/config.php';
+
+    $wordsID = $_POST["wordid"];
+    $listid = $_POST["listid"];
+    $wordsNL = $_POST["word-nl"];
+    $wordsEN = $_POST["word-en"];
+
+    GLOBAL $conn;
+    
+    $total = "";
+
+    $getTotal = "SELECT id FROM word WHERE list_id = $listid";
+    if ($newTotal = mysqli_query($conn, $getTotal)) {
+        $total = mysqli_num_rows($newTotal);
+    }
+
+    global $score;
+
+    if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+    }
+    if (isset($wordsEN) || (!empty($wordsEN))) {
+        foreach ($wordsEN as $wordEN) {
+            foreach ($wordsID as $wordID) {
+                $checkWord = "SELECT word_en FROM word WHERE id=$wordID";
+                $newResult = mysqli_query($conn, $checkWord);    
+                while ($row = $newResult->fetch_assoc()) {
+                    if ($row["word_en"] == $wordEN) {
+                        $score += 1;
+                    } elseif($row["word_en"] != $wordEN) {
+                        $score = $score;
+                    }
+                }
+            }
+        }
+       
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +101,7 @@ $result5 = mysqli_query($conn, $getWords);
 
         .input-form {
             display: flex;
-            flex-direction: column;
+            /* flex-direction: column; */
         }
         .right-ans {
             background-color: lightgreen;
@@ -113,199 +164,45 @@ $result5 = mysqli_query($conn, $getWords);
 </div>
            
     <div id="nl-en" class="lijst-div" style="margin-top: 2rem; align-items: start;">
-        <div style="margin-right: 2rem; text-align: right;">
-            <div class="word-list">
-                <?php 
-                    while ($row = mysqli_fetch_array($result)) {
-                        // $results[50] = $row["word_en"];
-                        // foreach ($results as $key => $value) {
-                        //     echo "<p id='word_en[]'>".$value."</p>";              
-                        // }                       
-                    ?>
-                
-                    <tr>
-                        <div id="divWordNL">
-                            <p class="line-height"><?php echo $row["word_nl"]; ?></p>
-                        </div>
-                    </tr>
-                <?php 
-                    }
-                ?>            
-            </div>                
-        </div>       
-        
-        <div style="margin-left: 2rem;">
-            <form id="input-form" class="input-form" method="post">
-                <?php 
-                    for ($i=0;$i<50;$i++) {
-                        while ($row = mysqli_fetch_array($result2)) {   
-                ?>
-                    <input id="wordID<?php echo $i?>" type="hidden" value="<?php echo $row["id"]; ?>">
-                    <input style="height: 22px;" type="text" id="wordCheck<?php echo $i++;?>" name="word-en[]" onkeydown="showCustomer(this.value)" required>
-                    <!-- <div id="txtHint"></div>        -->
-                <?php 
+        <form id="input-form" class="input-form" method="post">
+            <div style="margin-right: 2rem; text-align: right;">
+                <div class="word-list">
+                    <input type='hidden' name='listid' value='<?php echo $listid;?>'>
+                    <input type='hidden' name='listname' value='<?php echo $listname;?>'>
+                    <?php 
+                        while ($row = mysqli_fetch_array($result)) { ?>
+                            <input type='hidden' name='wordid[]' value='<?php echo $row["id"];?>'>
+                            <input type='hidden' name='word-nl[]' value='<?php echo $row["word_nl"];?>'>
+
+                        <tr>
+                            <div id="divWordNL">
+                                <p class="line-height" ><?php echo $row["word_nl"]; ?></p>
+                            </div>
+                        </tr>
+                    <?php 
                         }
-                    }
-                ?>  
-
-                <!-- <input onclick="AnsCheck()" type="button" value="Nakijken"> -->
-            </form>
-            <script>
-                // function showCustomer(str) {
-                //     if (str == "") {
-                //         document.getElementById("txtHint").innerHTML = "";
-                //         return;
-                //     }
-                //     const xhttp = new XMLHttpRequest();
-                //     xhttp.onload = function() {
-                //         document.getElementById("txtHint").innerHTML = this.responseText;
-                //     }
-                //     xhttp.open("GET", "get-data.php?q="+str);    
-                //     xhttp.send();
-                // }
-
-
-                let div1 = document.getElementById("divWordNL");
-                let allParas = div1.getElementsByTagName('p');
-                let num = allParas.length;
-
-                console.log(num);
-
-
-                
-                let id = document.getElementById("wordID5");
-                console.log(id);            
-
-                fetch ("get-data.php", {
-                    method: 'POST',
-                    // data die je meegeeft:
-                    body: JSON.stringify({words: 10, fortnite: "is leuk"}),
-
-                })
-                .then((result) => {
-                    
-                    if (result.status != 200) { throw new Error("Bad Server Response");}
-                    return result.text();
-                })
-                .then((response) => {
-                    // data is de data die je terug krijgt
-                    let data = JSON.parse(response);
-                    console.log(data)
-                })
-
-                // $('#wordCheck0').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "Hello") {
-                //         if ($("#wordCheck0").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck0").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     } 
-                // });
-                // $('#wordCheck1').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "Bye") {
-                //         if ($("#wordCheck1").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck1").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     }
-                // });
-                // $('#wordCheck2').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "Me") {
-                //         if ($("#wordCheck2").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck2").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     }
-                // });
-                // $('#wordCheck3').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "You") {
-                //         if ($("#wordCheck3").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck3").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     }
-                // });
-                // $('#wordCheck4').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "City") {
-                //         if ($("#wordCheck4").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck4").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     }
-                // });
-                // $('#wordCheck5').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "Village") {
-                //         if ($("#wordCheck5").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck5").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     }
-                // });
-                // $('#wordCheck6').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "Apple") {
-                //         if ($("#wordCheck6").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck6").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     }
-                // });
-                // $('#wordCheck7').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "Banana") {
-                //         if ($("#wordCheck7").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck7").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     }
-                // });
-                // $('#wordCheck8').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "House") {
-                //         if ($("#wordCheck8").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck8").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     }
-                // });
-                // $('#wordCheck9').keyup(function() {
-                //     var newInput = this.value;
-                //     if (newInput == "Room") {
-                //         if ($("#wordCheck9").hasClass("right-ans")) {
-                //             score = score;
-                //         } else {
-                //             $("#wordCheck9").addClass("right-ans");
-                //             score += 1;
-                //         }
-                //     }
-                // });
-                
-            </script>
-        </div>       
+                    ?>            
+                </div>                
+            </div>       
+            
+            <div style="margin-left: 2rem; display: flex; flex-direction: column;">
+                    <?php 
+                        while ($row = mysqli_fetch_array($result2)) {   
+                    ?>
+                            <input style="height: 22px;" type="text" id="wordCheck<?php echo $i++;?>" name="word-en[]">
+                    <?php 
+                        }
+                    ?>  
+                    <input type="submit" value="Nakijken" name="checkWordEN">
+            </div> 
+        </form>
+    </div>
+    <div style="margin-top: 100px;" class="lijst-div">
+        <h4 id="score" class="my-5">
+            <?php
+                echo "Je hebt ".$score."/".$total." goed!";
+            ?>
+        </h4>
     </div>
 
     <div id="en-nl" class="lijst-div display-none" style="margin-top: 2rem; align-items: start;">
@@ -337,7 +234,7 @@ $result5 = mysqli_query($conn, $getWords);
                     }
                 ?>  
 
-                <input onclick="AnsCheck()" type="button" value="Nakijken">
+                <input name="checkTotal" type="button" value="Nakijken">
             </form>
             <script>
                 function AnsCheck() {
