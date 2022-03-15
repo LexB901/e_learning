@@ -157,8 +157,6 @@ function deleteList() {
 </head>
     
     
-    
-    
 
 <body>   
     <div class="welcome-header-message">

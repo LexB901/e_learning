@@ -3,6 +3,8 @@ session_start();
 
 include 'Auth/config.php';
 
+// include 'get-data.php';
+
 GLOBAL $conn;
 
 if ($conn->connect_error) {
@@ -17,33 +19,7 @@ $result = mysqli_query($conn, $getWords);
 $result2 = mysqli_query($conn, $getWords);
 $result3 = mysqli_query($conn, $getWords);  
 $result4 = mysqli_query($conn, $getWords);
-
-function checkForm() {
-    include 'Auth/config.php';
-
-    $listid = $_POST["listid"];
-    $wordsNL = $_POST["word-nl"];
-    $wordsEN = $_POST["word-en"];
-
-    GLOBAL $conn;
-
-    if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-    }
-    
-    foreach (array_combine($wordsNL, $wordsEN) as $wordNL => $wordEN) {
-        if (!empty($wordNL) && !empty($wordEN)) {            
-            $sql = "INSERT INTO word (list_id, word_nl, word_en) VALUES ('$listid', '$wordNL', '$wordEN')";
-        } else {
-            continue;
-        }
-        if ($conn->query($sql) === TRUE) {
-        } else {
-            echo "Versturen van de data is mislukt!";
-        }
-    }
-
-};
+$result5 = mysqli_query($conn, $getWords);
 
 ?>
 
@@ -120,6 +96,9 @@ function checkForm() {
         }
     </script>
 </head>
+
+<a href="get-data.php">get-data</a>
+
 <body>
 <h6>
     <a href="welcome.php">terug</a>
@@ -138,9 +117,16 @@ function checkForm() {
             <div class="word-list">
                 <?php 
                     while ($row = mysqli_fetch_array($result)) {
-                ?>
+                        // $results[50] = $row["word_en"];
+                        // foreach ($results as $key => $value) {
+                        //     echo "<p id='word_en[]'>".$value."</p>";              
+                        // }                       
+                    ?>
+                
                     <tr>
-                        <p class="line-height"><?php echo $row["word_nl"]; ?></p>
+                        <div id="divWordNL">
+                            <p class="line-height"><?php echo $row["word_nl"]; ?></p>
+                        </div>
                     </tr>
                 <?php 
                     }
@@ -152,150 +138,171 @@ function checkForm() {
             <form id="input-form" class="input-form" method="post">
                 <?php 
                     for ($i=0;$i<50;$i++) {
-                        // for ($x=0;$x<50;$x++) {
-                            while ($row = mysqli_fetch_array($result2)) {   
+                        while ($row = mysqli_fetch_array($result2)) {   
                 ?>
-                    <input type="text" id="wordCheck<?php echo $i++;?>" name="word-en[]" required>
-                    <input type="hidden" name="wordIdd" value='<?php echo $row["id"]; ?>'>
-
+                    <input id="wordID<?php echo $i?>" type="hidden" value="<?php echo $row["id"]; ?>">
+                    <input style="height: 22px;" type="text" id="wordCheck<?php echo $i++;?>" name="word-en[]" onkeydown="showCustomer(this.value)" required>
+                    <!-- <div id="txtHint"></div>        -->
                 <?php 
-                            }
-                        // }
+                        }
                     }
                 ?>  
 
-                <input onclick="AnsCheck()" type="button" value="Nakijken">
+                <!-- <input onclick="AnsCheck()" type="button" value="Nakijken"> -->
             </form>
             <script>
-                $(document).ready(function() {
-                    $('input').keyup(function(event) {
-                        if (event.which === 13)
-                        {
-                            event.preventDefault();
-                            $('form').submit();
-                        }
-                    });
-                });
+                // function showCustomer(str) {
+                //     if (str == "") {
+                //         document.getElementById("txtHint").innerHTML = "";
+                //         return;
+                //     }
+                //     const xhttp = new XMLHttpRequest();
+                //     xhttp.onload = function() {
+                //         document.getElementById("txtHint").innerHTML = this.responseText;
+                //     }
+                //     xhttp.open("GET", "get-data.php?q="+str);    
+                //     xhttp.send();
+                // }
 
-                function AnsCheck() {
-                    document.getElementById("score").innerHTML = "Je hebt " + score + "/10 woorden goed!";   
-                }
 
-                let score = 0;
+                let div1 = document.getElementById("divWordNL");
+                let allParas = div1.getElementsByTagName('p');
+                let num = allParas.length;
+
+                console.log(num);
+
 
                 
+                let id = document.getElementById("wordID5");
+                console.log(id);            
 
+                fetch ("get-data.php", {
+                    method: 'POST',
+                    // data die je meegeeft:
+                    body: JSON.stringify({words: 10, fortnite: "is leuk"}),
 
-                $('#wordCheck0').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "Hello") {
-                        if ($("#wordCheck0").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck0").addClass("right-ans");
-                            score += 1;
-                        }
-                    } 
-                });
-                $('#wordCheck1').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "Bye") {
-                        if ($("#wordCheck1").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck1").addClass("right-ans");
-                            score += 1;
-                        }
-                    }
-                });
-                $('#wordCheck2').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "Me") {
-                        if ($("#wordCheck2").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck2").addClass("right-ans");
-                            score += 1;
-                        }
-                    }
-                });
-                $('#wordCheck3').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "You") {
-                        if ($("#wordCheck3").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck3").addClass("right-ans");
-                            score += 1;
-                        }
-                    }
-                });
-                $('#wordCheck4').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "City") {
-                        if ($("#wordCheck4").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck4").addClass("right-ans");
-                            score += 1;
-                        }
-                    }
-                });
-                $('#wordCheck5').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "Village") {
-                        if ($("#wordCheck5").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck5").addClass("right-ans");
-                            score += 1;
-                        }
-                    }
-                });
-                $('#wordCheck6').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "Apple") {
-                        if ($("#wordCheck6").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck6").addClass("right-ans");
-                            score += 1;
-                        }
-                    }
-                });
-                $('#wordCheck7').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "Banana") {
-                        if ($("#wordCheck7").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck7").addClass("right-ans");
-                            score += 1;
-                        }
-                    }
-                });
-                $('#wordCheck8').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "House") {
-                        if ($("#wordCheck8").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck8").addClass("right-ans");
-                            score += 1;
-                        }
-                    }
-                });
-                $('#wordCheck9').keyup(function() {
-                    var newInput = this.value;
-                    if (newInput == "Room") {
-                        if ($("#wordCheck9").hasClass("right-ans")) {
-                            score = score;
-                        } else {
-                            $("#wordCheck9").addClass("right-ans");
-                            score += 1;
-                        }
-                    }
-                });
+                })
+                .then((result) => {
+                    
+                    if (result.status != 200) { throw new Error("Bad Server Response");}
+                    return result.text();
+                })
+                .then((response) => {
+                    // data is de data die je terug krijgt
+                    let data = JSON.parse(response);
+                    console.log(data)
+                })
+
+                // $('#wordCheck0').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "Hello") {
+                //         if ($("#wordCheck0").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck0").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     } 
+                // });
+                // $('#wordCheck1').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "Bye") {
+                //         if ($("#wordCheck1").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck1").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     }
+                // });
+                // $('#wordCheck2').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "Me") {
+                //         if ($("#wordCheck2").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck2").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     }
+                // });
+                // $('#wordCheck3').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "You") {
+                //         if ($("#wordCheck3").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck3").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     }
+                // });
+                // $('#wordCheck4').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "City") {
+                //         if ($("#wordCheck4").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck4").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     }
+                // });
+                // $('#wordCheck5').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "Village") {
+                //         if ($("#wordCheck5").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck5").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     }
+                // });
+                // $('#wordCheck6').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "Apple") {
+                //         if ($("#wordCheck6").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck6").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     }
+                // });
+                // $('#wordCheck7').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "Banana") {
+                //         if ($("#wordCheck7").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck7").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     }
+                // });
+                // $('#wordCheck8').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "House") {
+                //         if ($("#wordCheck8").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck8").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     }
+                // });
+                // $('#wordCheck9').keyup(function() {
+                //     var newInput = this.value;
+                //     if (newInput == "Room") {
+                //         if ($("#wordCheck9").hasClass("right-ans")) {
+                //             score = score;
+                //         } else {
+                //             $("#wordCheck9").addClass("right-ans");
+                //             score += 1;
+                //         }
+                //     }
+                // });
                 
             </script>
         </div>       
