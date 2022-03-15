@@ -1,0 +1,15 @@
+C:\Users\lexbr\source\repos\hfstk3\bin\Debug\hfstk3.exe.config
+C:\Users\lexbr\source\repos\hfstk3\bin\Debug\hfstk3.exe
+C:\Users\lexbr\source\repos\hfstk3\bin\Debug\hfstk3.pdb
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\hfstk3.csprojAssemblyReference.cache
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\MainWindow.g.cs
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\App.g.cs
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\hfstk3_MarkupCompile.cache
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\hfstk3_MarkupCompile.lref
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\MainWindow.baml
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\hfstk3.g.resources
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\hfstk3.Properties.Resources.resources
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\hfstk3.csproj.GenerateResource.cache
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\hfstk3.csproj.CoreCompileInputs.cache
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\hfstk3.exe
+C:\Users\lexbr\source\repos\hfstk3\obj\Debug\hfstk3.pdb
