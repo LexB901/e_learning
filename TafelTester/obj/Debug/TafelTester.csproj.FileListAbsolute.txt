@@ -1,0 +1,15 @@
+C:\Users\lexbr\source\repos\TafelTester\bin\Debug\TafelTester.exe.config
+C:\Users\lexbr\source\repos\TafelTester\bin\Debug\TafelTester.exe
+C:\Users\lexbr\source\repos\TafelTester\bin\Debug\TafelTester.pdb
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\TafelTester.csprojAssemblyReference.cache
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\MainWindow.g.cs
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\App.g.cs
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\TafelTester_MarkupCompile.cache
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\TafelTester_MarkupCompile.lref
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\MainWindow.baml
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\TafelTester.g.resources
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\TafelTester.Properties.Resources.resources
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\TafelTester.csproj.GenerateResource.cache
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\TafelTester.csproj.CoreCompileInputs.cache
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\TafelTester.exe
+C:\Users\lexbr\source\repos\TafelTester\obj\Debug\TafelTester.pdb
