@@ -87,7 +87,7 @@ $wordListEN = ['Hello', 'Bye', 'Me', 'You', 'City', 'Village', 'Apple', 'Banana'
 </head>
 <body>
 <h6>
-    <a href="welcome.php">terug</a>
+    <a class="btn btn-warning m-3" href="welcome.php">terug</a>
 </h6>
 <div style="margin-top: 0px;" class="lijst-div">
     <a id="NLEN" class="trans-active" onclick="ChangeTransNLEN()">NL -> EN</a>
@@ -131,7 +131,7 @@ $wordListEN = ['Hello', 'Bye', 'Me', 'You', 'City', 'Village', 'Apple', 'Banana'
             </form>
             <script>
                 function ResetForm() {
-                    document.getElementById("input-form").reset();
+                    reload = location.reload();
                 }
                 function AnsCheck() {
                     let removeClass = document.getElementById("score");

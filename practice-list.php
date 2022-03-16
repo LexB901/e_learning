@@ -194,7 +194,7 @@ function checkWordNL() {
 </head>
 <body>
 <h6>
-    <a class="btn btn-warning my-5" href="welcome.php">terug</a>
+    <a class="btn btn-warning m-3" href="welcome.php">terug</a>
 </h6>
 <div style="margin-top: 0px;" class="lijst-div">
     <a id="NLEN" class="trans-active" onclick="ChangeTransNLEN()">NL -> EN</a>

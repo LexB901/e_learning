@@ -49,6 +49,8 @@ function addWords() {
         }
     }
 
+    
+
 };
 
 function deleteWord() {
@@ -193,7 +195,7 @@ function deleteWord() {
     </style>
 </head>
 <body>
-<h6><a href="welcome.php">terug</a></h6>
+<h6><a class="btn btn-warning m-3" href="welcome.php">terug</a></h6>
     <div style="margin: 3rem;">
         <h4 style ="padding-left: 4rem; padding-bottom: 1rem;"><?php echo $listname ?></h4>
             <?php     
