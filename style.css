@@ -7,6 +7,8 @@ html,body {
     height: 100vh;
     width: 100vw;
     overflow-x: hidden;
+    font: 16px sans-serif;
+    background-color: #fafafa;
 
 }
 
@@ -64,4 +66,152 @@ p {
     padding: 20px;
     font-size: 1.2rem;
     text-align: center;
+}
+.line-height {
+    line-height: 20px;
+}
+
+.geen-woord {
+    background-color: white;
+}
+
+.correct {
+    background-color: lightgreen;
+}
+
+.fout {
+    background-color: red;
+}
+.marg-top-10 {
+    margin-top: 10px;
+}
+.input-txt-ctr {
+    text-align: center;
+}
+
+#main {
+    width: 50px;
+    height: 50px;
+}
+
+#main .AppGNB_6Button {
+    cursor: pointer;
+}
+
+#main .AppGNB_6Button .AppGNB {
+    position: absolute;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+}
+
+#main .AppGNB_6Button .AppGNB .bgGreen {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #007bff;
+}
+#main .AppGNB_6Button .AppGNB.on .bgGreen {
+    opacity: 0;
+}
+
+#main .AppGNB_6Button .AppGNB .plusIcon {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+#main .AppGNB_6Button .AppGNB .plusIcon div:nth-child(1) {
+    position: absolute;
+    background: #ffffff;
+    height: 30px;
+    width: 3px;
+    top: 10px;
+    left: 23px;
+}
+#main .AppGNB_6Button .AppGNB .plusIcon div:nth-child(2) {
+    position: absolute;
+    background: #ffffff;
+    height: 3px;
+    width: 30px;
+    top: 23px;
+    left: 10px;
+}
+
+svg {
+    width: 50px;
+}
+
+.form-center {
+    display: flex;
+    justify-content: center;
+
+}
+
+p {
+    margin-bottom: 0;
+}
+
+.wordListStyle {
+    width: 215px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    border-radius: 5px;
+    height: 38px;
+}
+
+.display-none {
+    display: none;
+}
+
+.display-block {
+    display: block;
+}
+.word-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.right-ans {
+    background-color: lightgreen;
+}
+
+.trans-active {
+    color: #ffc107;
+}
+
+.trans-active:hover {
+    cursor: pointer;
+    color: #ffc107;
+}
+
+.trans-inactive {
+    color: red;
+}
+
+.trans-inactive:hover {
+    cursor: pointer;
+    color: red;
+}
+
+.marg-bottom-1r {
+    margin-bottom: 1rem;
+}
+
+.button-check-div {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
 }

@@ -20,27 +20,27 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
  
     // Validate new password
     if(empty(trim($_POST["new_password"]))){
-        $new_password_err = "Please enter the new password.";     
+        $new_password_err = "Vul je nieuwe wachtwoord in.";     
     } elseif(strlen(trim($_POST["new_password"])) < 6){
-        $new_password_err = "Password must have atleast 6 characters.";
+        $new_password_err = "Het wachtwoord moet minimaal 6 tekens hebben.";
     } else{
         $new_password = trim($_POST["new_password"]);
     }
     
     // Validate confirm password
     if(empty(trim($_POST["confirm_password"]))){
-        $confirm_password_err = "Please confirm the password.";
+        $confirm_password_err = "Bevestig je wachtwoord";
     } else{
         $confirm_password = trim($_POST["confirm_password"]);
         if(empty($new_password_err) && ($new_password != $confirm_password)){
-            $confirm_password_err = "Password did not match.";
+            $confirm_password_err = "Wachtwoorden komen niet overeen.";
         }
     }
         
     // Check input errors before updating the database
     if(empty($new_password_err) && empty($confirm_password_err)){
         // Prepare an update statement
-        $sql = "UPDATE users SET password = ? WHERE id = ?";
+        $sql = "UPDATE user SET password = ? WHERE id = ?";
         
         if($stmt = mysqli_prepare($conn, $sql)){
             // Bind variables to the prepared statement as parameters
@@ -57,7 +57,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 header("location: login.php");
                 exit();
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Oops! Er ging iets fout. Probeer het laten nog eens!";
             }
 
             // Close statement
@@ -84,23 +84,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 </head>
 <body>
     <div class="center-form">
-        <div class="wrapper">
-            <h2>Reset Password</h2>
-            <p>Please fill out this form to reset your password.</p>
+        <div>
+            <h2>verander je wachtwoord</h2>
+            <p>Vul het formulier in om je wachtwoord te veranderen.</p>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"> 
                 <div class="form-group">
-                    <label>New Password</label>
+                    <label>Nieuw wachtwoord</label>
                     <input type="password" name="new_password" class="form-control <?php echo (!empty($new_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $new_password; ?>">
                     <span class="invalid-feedback"><?php echo $new_password_err; ?></span>
                 </div>
                 <div class="form-group">
-                    <label>Confirm Password</label>
+                    <label>Herhaal wachtwoord</label>
                     <input type="password" name="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>">
                     <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
                 </div>
                 <div class="form-group">
-                    <input type="submit" class="btn btn-warning" value="Submit">
-                    <a class="btn house-color ml-2" href="../welcome.php">Cancel</a>
+                    <input type="submit" class="btn btn-warning" value="Verzenden">
+                    <a class="btn house-color ml-2" href="../welcome.php">Annuleer</a>
                 </div>
             </form>
         </div>    
