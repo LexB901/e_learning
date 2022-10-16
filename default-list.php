@@ -5,7 +5,7 @@ include 'function.php';
 
 checkLogin();
 
-$wordListNL = ['Een', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes', 'Zeven', 'Acht', 'Negen', 'Tien'];
+$wordListNL = ['Een' => 'een', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes', 'Zeven', 'Acht', 'Negen', 'Tien'];
 $wordListEN = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
 
 ?>
@@ -67,7 +67,7 @@ $wordListEN = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', '
 </div>
 
     <div class="lijst-div">
-        <h2 class="my-5">Let op de hoofdletters!</h2>
+        <h2 class="my-5">Zet hem op, veel succes!</h2>
     </div>
 
     <div id="nl-en">
@@ -91,12 +91,13 @@ $wordListEN = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', '
                 </form>
                 <script>
                     let wordListEN = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+                    let wordListEN2 = ["one", "two", "three", "four", "fve", "six", "seven", "eight", "nine", "ten"];
 
                     let score = 0;
                     for (let i = 0; i < 10; i++) {
                         $('#wordCheck'+i).keyup(function() {
                             var newInput = this.value;
-                            if (newInput == wordListEN[i]) {
+                            if (newInput == wordListEN[i] || newInput == wordListEN2[i]) {
                                 if ($("#wordCheck"+i).hasClass("right-ans")) {
                                     score = score;
                                 } else {
@@ -140,12 +141,13 @@ $wordListEN = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', '
                 </form>
                 <script>
                     let wordListNL = ["Een", "Twee", "Drie", "Vier", "Vijf", "Zes", "Zeven", "Acht", "Negen", "Tien"];
+                    let wordListNL2 = ["een", "twee", "drie", "vier", "vijf", "zes", "zeven", "acht", "negen", "tien"];
 
                     let score2 = 0;
                     for (let g = 0; g < 10 ; g++) {
                         $('#wordCheck1'+g).keyup(function() {
                             let newInput = this.value;
-                            if (newInput == wordListNL[g]) {
+                            if (newInput == wordListNL[g] || newInput == wordListNL2[g]) {
                                 if ($("#wordCheck1"+g).hasClass("right-ans")) {
                                     score2 = score2;
                                 } else {
